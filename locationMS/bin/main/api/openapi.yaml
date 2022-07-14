@@ -1,0 +1,195 @@
+openapi: 3.0.3
+info:
+  title: Location App
+  description: >
+    'This is a ***location app API***.  You can find out more about Swagger at [swagger.io](http://swagger.io).
+    Description supports markdown markup. For example, you can use the `inline code` using back ticks.'
+  termsOfService: https://deep-worx.github.com/auspost/locationMS/blob/master/LICENSE
+  contact:
+    email: deepakpal1982@gmail.com
+  license:
+    name: MIT
+    url: https://deep-worx.github.com/auspost/locationMS/blob/master/LICENSE
+  version: 1.0.0
+externalDocs:
+  description: Any document link you want to generate along with API.
+  url: http://swagger.io
+servers:
+  - url: https://location.swagger.io/v2
+tags:
+  - name: location
+    description: Everything about location
+    externalDocs:
+      description: Find out more (extra document link)
+      url: http://swagger.io
+paths:  
+  /api/v1/allLocations:
+    get:
+      tags:
+        - location
+      summary: Returns all suburbs's locations
+      description: Returns all suburbs's locations, else empty collection
+      operationId: getAllLocations
+      responses:
+        200:
+          description: For successful fetch.
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+  /api/v1/locations:
+    get:
+      tags:
+        - location
+      summary: Returns all the matched locations
+      description: Returns the locations that matches the given query criteria
+      operationId: getLocations
+      parameters:
+        - name: suburbs
+          in: query
+          description: Location suburbs
+          required: false
+          schema:
+            type: string
+        - name: pincode
+          in: query
+          description: Location pincode
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Query page number
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 1
+        - name: size
+          in: query
+          description: Query page size
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+      responses:
+        200:
+          description: For successful fetch.
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Location'              
+    post:
+      tags:
+        - location
+      summary: Creates a new suburbs location
+      description: Creates a new suburbs location. Does nothing if location already exists.
+      operationId: createLocation
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/AddLocationReq'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddLocationReq'
+      responses:
+        200:
+          description: For successful fetch.
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Location'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+  /api/v1/locations/{id}:
+    get:
+      tags:
+        - location
+      summary: Returns suburbs's Location
+      description: Returns suburbs's Location based on given Location ID.
+      operationId: getLocationById
+      parameters:
+        - name: id
+          in: path
+          description: Location Identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: For successful fetch.
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Location'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Location'
+    delete:
+      tags:
+        - location
+      summary: Deletes suburbs's Location
+      description: Deletes suburbs's Location based on given location ID.
+      operationId: deleteLocationById
+      parameters:
+        - name: id
+          in: path
+          description: Location Identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        202:
+          description: Accepts the deletion request and perform deletion. If ID does not exist, does nothing.
+          content: {}
+
+components:
+  schemas:
+    AddLocationReq:
+      allOf:
+        - $ref: '#/components/schemas/Location'
+        - type: object
+          properties:
+            userId:
+              type: string
+
+      xml:
+        name: AddLocationReq
+    Location:
+      type: object
+      properties:
+        id:
+          description: Location identifier
+          type: string
+        suburbs:
+          description: suburbs name
+          type: string
+        state:
+          description: state name
+          type: string
+        country:
+          description: country name
+          type: string
+        pincode:
+          description: postal code
+          type: string
+      xml:
+        name: Location
+    
