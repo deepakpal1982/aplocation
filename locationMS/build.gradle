@@ -33,9 +33,17 @@ compileJava.dependsOn swaggerSources.location.code
 sourceSets.main.java.srcDir "${swaggerSources.location.code.outputDir}/src/main/java"
 sourceSets.main.resources.srcDir "${swaggerSources.location.code.outputDir}/src/main/resources"
 
+
+
 repositories {
   mavenCentral()
 }
+
+test {
+    jvmArgs '--enable-preview'
+    useJUnitPlatform()
+}
+
 
 dependencies {
     // OpenAPI Starts
@@ -63,10 +71,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
-test {
-    jvmArgs '--enable-preview'
-    useJUnitPlatform()
-}

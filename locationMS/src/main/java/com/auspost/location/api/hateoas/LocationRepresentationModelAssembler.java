@@ -15,6 +15,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author : github.com/deepakpal1982
+ * @project : locationMS
+ * @created : 14/07/2021, Tuesday
+ **/
 @Component
 public class LocationRepresentationModelAssembler extends
 RepresentationModelAssemblerSupport<LocationEntity, Location> {
@@ -36,13 +41,13 @@ super(LocationController.class, Location.class);
 public Location toModel(LocationEntity entity) {
 Location resource = createModelWithId(entity.getId(), entity);
 BeanUtils.copyProperties(entity, resource);
-//resource.setId(entity.getId().toString());
+resource.setId(entity.getId().toString());
 
 return resource;
 }
 
 /**
-* Coverts the collection of Product entities to list of resources.
+* Coverts the collection of Location entities to list of resources.
 *
 * @param entities
 */

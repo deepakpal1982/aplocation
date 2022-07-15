@@ -1,8 +1,9 @@
 package com.auspost.location.api.exception;
 
 /**
- * @author : github.com/sharmasourabh
- * @project : Chapter08 - Modern API Development with Spring and Spring Boot
+ * @author : github.com/deepakpal1982
+ * @project : locationMS
+ * @created : 14/07/2021, Tuesday
  **/
 public class ResourceNotFoundException extends RuntimeException {
 

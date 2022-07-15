@@ -12,7 +12,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
-
+/**
+ * @author : github.com/deepakpal1982
+ * @project : locationMS
+ * @created : 14/07/2021, Tuesday
+ **/
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 {

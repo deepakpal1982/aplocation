@@ -1,6 +1,5 @@
 package com.auspost.location.api;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.mockito.ArgumentMatchers.any;
@@ -9,31 +8,32 @@ import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.util.ReflectionTestUtils;
-
 import com.auspost.location.api.entity.LocationEntity;
 import com.auspost.location.api.exception.ResourceNotFoundException;
 import com.auspost.location.api.model.AddLocationReq;
 import com.auspost.location.api.repository.LocationRepository;
 import com.auspost.location.api.service.LocationServiceImpl;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-public class LocationServiceTest {
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
- 
-  private final static String id = "a1b9b31d-e73c-4112-af7c-b68530f38222";
+/**
+ * @author : github.com/deepakpal1982
+ * @project : locationMS
+ * @created : 14/07/2021, Tuesday
+ **/
+@ExtendWith(MockitoExtension.class)
+public class LocationServiceTest {
+    private final static String id = "a1b9b31d-e73c-4112-af7c-b68530f38222";
   private final static String nonExistId = "a1b9b31d-e73c-4112-af7c-b68530f38220";
   private static LocationEntity entity;
   private static AddLocationReq addLocationReq;
@@ -46,8 +46,7 @@ public class LocationServiceTest {
   public static void setup() {
     entity = new LocationEntity()
         .setId(UUID.fromString(id))
-       
-        .setSuburbs("City").setState("State").setCountry("Country").setPincode("12345");
+        .setSuburbs("Suburbs").setState("State").setCountry("Country").setPincode("12345");
     addLocationReq = new AddLocationReq().id(entity.getId().toString()).suburbs(entity.getSuburbs())
         .state(entity.getState()).country(entity.getCountry()).pincode(entity.getPincode());
   }
@@ -61,7 +60,6 @@ public class LocationServiceTest {
     LocationEntity e = ReflectionTestUtils.invokeMethod(srvc, "toEntity", addLocationReq);
     // then
     then(e).as("Check Location entity is returned and not null").isNotNull();
-   
     then(e.getSuburbs()).as("Check city is set").isEqualTo(entity.getSuburbs());
     then(e.getState()).as("Check state is set").isEqualTo(entity.getState());
     then(e.getCountry()).as("Check country is set").isEqualTo(entity.getCountry());
@@ -107,38 +105,30 @@ public class LocationServiceTest {
   @Test
   @DisplayName("delete Location by given existing id")
   public void deleteLocationByIdWhenExists() {
-    given(repository.findById(UUID.fromString(nonExistId)))
-        .willReturn(Optional.of(entity));
-    willDoNothing().given(repository).deleteById(UUID.fromString(nonExistId));
+    willDoNothing().given(repository).deleteById(UUID.fromString(id));
     // when
-    service.deleteLocationById(nonExistId);
+    service.deleteLocationById(id);
     // then
-    verify(repository, times(1)).findById(UUID.fromString(nonExistId));
-    verify(repository, times(1)).deleteById(UUID.fromString(nonExistId));
+    verify(repository, times(1)).deleteById(UUID.fromString(id));
   }
 
   @Test
   @DisplayName("delete Location by given non-existing id, should throw ResourceNotFoundException")
-  public void deleteLocationByNonExistId() throws Exception {
-    given(repository.findById(UUID.fromString(nonExistId))).willReturn(Optional.empty())
-        .willThrow(new ResourceNotFoundException(
-            String.format("No Location found with id %s.", nonExistId)));
-    // when
+  public void deleteLocationesByNonExistId() throws Exception {
+
     try {
       service.deleteLocationById(nonExistId);
     } catch (Exception ex) {
       // then
-      assertThat(ex).isInstanceOf(com.auspost.location.api.exception.ResourceNotFoundException.class);
+      assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
       assertThat(ex.getMessage()).contains("No Location found with id " + nonExistId);
     }
     // then
-    verify(repository, times(1)).findById(UUID.fromString(nonExistId));
-    verify(repository, times(0)).deleteById(UUID.fromString(nonExistId));
   }
 
   @Test
-  @DisplayName("return all Locationes")
-  public void getAllLocation() {
+  @DisplayName("return all Locations")
+  public void getAllLocations() {
     given(repository.findAll()).willReturn(List.of(entity));
     // when
     Iterable<LocationEntity> result = service.getAllLocations();
@@ -146,4 +136,27 @@ public class LocationServiceTest {
     assertThat(result).isNotNull();
     assertThat(result).contains(entity);
   }
+
+  @Test
+  @DisplayName("return  Locations by Pincode")
+  public void getLocationsbyPincode() {
+    given(repository.findBySuburbsOrPincode(null,"3000")).willReturn(List.of(entity));
+    // when
+    Iterable<LocationEntity> result = service.getLocationsBySuburbsOrPincode(null,"3000");
+    // then
+    assertThat(result).isNotNull();
+    assertThat(result).contains(entity);
+  }
+  
+  @Test
+  @DisplayName("return  Locations by Suburbs")
+  public void getLocationsbySuburbs() {
+    given(repository.findBySuburbsOrPincode("Gosford",null)).willReturn(List.of(entity));
+    // when
+    Iterable<LocationEntity> result = service.getLocationsBySuburbsOrPincode("Gosford",null);
+    // then
+    assertThat(result).isNotNull();
+    assertThat(result).contains(entity);
+  }
+
 }
