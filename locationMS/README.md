@@ -10,7 +10,7 @@ name
 - Some form of persistence
 
 # The development notes : 
-The Application API has been designed using the OpenAPI Specification (OAS). We write API descriptions using 3.0 of OAS (https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.3.md) and generate models and API interfaces using the Swagger Codegen tool (Using Gradle plugin).
+The Application API has been designed using the OpenAPI Specification (OAS). We has written API descriptions using 3.0 of OAS (https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.3.md) and generate models and API interfaces using the Swagger Codegen tool (Using Gradle plugin).
 
 We also implemented a Global Exception handler to centralize the handling of the exceptions.
 
