@@ -16,7 +16,7 @@ We also implemented a Global Exception handler to centralize the handling of the
 
 To adhere to best practices, This API implemented database migration using Flyway, maintaining and persisting data using repositories, and writing business logic to services. Using Spring HATEOAS assemblers, the controller enhances the responses with HATEOAS and ETags.
 
-This app uses the Spring Security framework to restrict authenticated users from posting and deleting location data. In addition, a necessary CQRS and CSRF have been configured for protection. 
+This app uses the Spring Security framework to restrict authenticated users from posting and deleting location data. In addition, a necessary CORS and CSRF have been configured for protection. 
 
 For Testing the API, A unit and integration tests using JUnit, the Spring test libraries, AssertJ, and Hamcrest have been written to catch the bugs and gaps.
 
